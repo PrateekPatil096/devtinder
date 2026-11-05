@@ -1,27 +1,35 @@
 const express=require("express");
 const app=express();
+const connectDB=require("./config/database");
+const User=require("./modles/user")
 
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong");
+app.post("/signup",async(req,res)=>{
+    const user= new User({
+        firstName: "cristiano",
+        lastName: "ronaldo",
+        email: "cr7@gmail.com",
+        password: "cr7@777",
+
+    });
+    try{
+    await user.save();
+    res.send("user data sent succefully");
     }
+    catch (err){
+        res.status(400).send("error saving the user")
+        }
+
 });
 
-app.get("/getUserData",(req,res)=>{
-    //try{
-        throw new Error("asdfghjk");
-        res.send("user data sent")
-   // }catch{
-        res.status(500).send("something wrong")
-    //}
-});
 
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong");
-    }
-});
+connectDB()
+    .then(()=>{
+        console.log("database connection successfully ")
+         app.listen(7777,()=>{
+        console.log("server is successfully listenting on port 7777")
+    });
+})
 
-app.listen(7777,()=>{
-    console.log("server is successfully listenting on port 7777")
+.catch((err)=>{
+    console.error("database cannot be connected");
 })
