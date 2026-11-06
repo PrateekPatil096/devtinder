@@ -3,14 +3,10 @@ const app=express();
 const connectDB=require("./config/database");
 const User=require("./modles/user")
 
-app.post("/signup",async(req,res)=>{
-    const user= new User({
-        firstName: "cristiano",
-        lastName: "ronaldo",
-        email: "cr7@gmail.com",
-        password: "cr7@777",
+app.use(express.json());
 
-    });
+app.post("/signup",async(req,res)=>{
+    const user= new User(req.body);
     try{
     await user.save();
     res.send("user data sent succefully");
@@ -20,6 +16,33 @@ app.post("/signup",async(req,res)=>{
         }
 
 });
+
+app.get("/user",async(req,res)=>{
+    const useremail=req.body.email;
+
+    try{
+        const users=await User.find({email:useremail});
+        if(users.length===0){
+            res.status(404).send("user not found")
+        }else{
+            res.send(users)
+        }
+    }
+        catch(err){
+            res.status(400).send("something went wrong");
+
+        }
+    
+});
+
+app.get("/feed",async(req,res)=>{
+    try{
+        const users=await User.find({});
+        res.send(users);
+    }catch(err){
+        res.status(400).send("something went wrong ")
+    }
+})
 
 
 connectDB()
