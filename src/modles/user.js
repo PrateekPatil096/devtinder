@@ -1,26 +1,53 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-const userSchema=new mongoose.Schema({
-    firstName:{
-        type:String,
+const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+    minLength: 4,
+    maxLength: 50,
+  },
+  lastName: {
+    type: String,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+  },
+  age: {
+    type: Number,
+    min: 18,
+  },
+  gender: {
+    type: String,
+    validate(value) {
+      if (!["male", "female", "others"].includes(value)) {
+        throw new Error("gender data is not valid");
+      }
     },
-    lastName:{
-        type:String,
-    },
-    email:{
-        type:String,
-    },
-    password:{
-        type:String,
-    },
-    age:{
-        type:Number,
-    },
-    gender:{
-        type:String,
-    },
+  },
 
+  photoURL: {
+    type: String,
+    default:
+      "https://imgs.search.brave.com/VDY2RWKbbvRjQ85B9oq3dP9wOGv5NI4KrQ0oDaDm3A4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L3ByZW1pdW0tdmVj/dG9yL2RlZmF1bHQt/YXZhdGFyLXByb2Zp/bGUtaWNvbi1zb2Np/YWwtbWVkaWEtdXNl/ci1pbWFnZS1ncmF5/LWF2YXRhci1pY29u/LWJsYW5rLXByb2Zp/bGUtc2lsaG91ZXR0/ZS12ZWN0b3ItaWxs/dXN0cmF0aW9uXzU2/MTE1OC0zMzgzLmpw/Zz9zZW10PWFpc19o/eWJyaWQmdz03NDAm/cT04MA",
+  },
+
+  about: {
+    type: String,
+    default: "this is default about of the user",
+  },
+
+  skills: {
+    type: [String],
+  },
 });
 
-const user=mongoose.model("user",userSchema);
-module.exports=user;
+const user = mongoose.model("user", userSchema);
+module.exports = user;

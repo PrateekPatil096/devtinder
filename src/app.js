@@ -49,14 +49,17 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user",async(req,res)=>{
-  const userId=req.body.userId;
-  const data=req.body;
-  try{
-    await User.findByIdAndUpdate({_id:userId},data);
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, data, {
+      runValidators: true,
+    });
+
     res.send("user updated successfully");
-  }catch{
-    res.status(400).send("something went wrong");
+  } catch {
+    res.status(400).send("something went wrong: " + err.message);
   }
 });
 
