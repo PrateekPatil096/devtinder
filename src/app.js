@@ -55,9 +55,9 @@ app.patch("/user/:userId", async (req, res) => {
   try {
     const allowedUpdates=["photoURL","about","gender","age","skills"];
 
-    const isUpdateAllowed=Object.keys(data).every((k)=>{
+    const isUpdateAllowed=Object.keys(data).every((k)=>
       allowedUpdates.includes(k)
-    });
+    );
 
     if(!isUpdateAllowed){
       throw new Error("update is not allowed")
@@ -86,5 +86,5 @@ connectDB()
   })
 
   .catch((err) => {
-    console.error("database cannot be connected");
+    console.error("database cannot be connected",err);
   });
