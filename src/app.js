@@ -2,16 +2,30 @@ const express = require("express");
 const app = express();
 const connectDB = require("./config/database");
 const User = require("./modles/user");
+const { validateSignUpData } = require("./utils/validation");
+const bcrypt=require("bcrypt");
 
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const user = new User(req.body);
   try {
+    validateSignUpData(req);
+
+    const { firstName, lastName, email, password } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log(passwordHash);
+
+    const user = new User({
+      firstName,
+      lastName,
+      email,
+      password: passwordHash,
+    });
     await user.save();
+
     res.send("user data sent succefully");
   } catch (err) {
-    res.status(400).send("error saving the user");
+    res.status(400).send(err.message);
   }
 });
 
@@ -53,17 +67,17 @@ app.patch("/user/:userId", async (req, res) => {
   const userId = req.params?.userId;
   const data = req.body;
   try {
-    const allowedUpdates=["photoURL","about","gender","age","skills"];
+    const allowedUpdates = ["photoURL", "about", "gender", "age", "skills"];
 
-    const isUpdateAllowed=Object.keys(data).every((k)=>
-      allowedUpdates.includes(k)
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      allowedUpdates.includes(k),
     );
 
-    if(!isUpdateAllowed){
-      throw new Error("update is not allowed")
+    if (!isUpdateAllowed) {
+      throw new Error("update is not allowed");
     }
 
-    if(data?.skills.length>10){
+    if (data?.skills.length > 10) {
       throw new Error("more tahn 10 skills are not allowed");
     }
 
@@ -72,7 +86,7 @@ app.patch("/user/:userId", async (req, res) => {
     });
 
     res.send("user updated successfully");
-  } catch(err) {
+  } catch (err) {
     res.status(400).send("something went wrong: " + err.message);
   }
 });
@@ -86,5 +100,5 @@ connectDB()
   })
 
   .catch((err) => {
-    console.error("database cannot be connected",err);
+    console.error("database cannot be connected", err);
   });
