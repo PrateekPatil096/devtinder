@@ -29,6 +29,27 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login",async(req,res)=>{
+try{
+    const{email,password}=req.body;
+    const user=await User.findOne({email:email});
+
+    if(!user){
+      throw new Error("invalid E");
+    }
+    const isPasswordValid=await bcrypt.compare(password,user.password);
+
+    if(isPasswordValid){
+      res.send("login successful!!");
+    }else{
+      throw new Error("inavalid");
+    }
+}
+catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
 app.get("/user", async (req, res) => {
   const useremail = req.body.email;
 
