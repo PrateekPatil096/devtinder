@@ -4,8 +4,10 @@ const connectDB = require("./config/database");
 const User = require("./modles/user");
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt=require("bcrypt");
+const cookieParser=require("cookie-parser");
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup", async (req, res) => {
   try {
@@ -40,6 +42,7 @@ try{
     const isPasswordValid=await bcrypt.compare(password,user.password);
 
     if(isPasswordValid){
+      res.cookie("token","apappapapapapapap");
       res.send("login successful!!");
     }else{
       throw new Error("inavalid");
@@ -49,6 +52,12 @@ catch (err) {
     res.status(400).send(err.message);
   }
 });
+
+app.get("/profile",async(req,res)=>{
+    const cookies=req.cookies;
+    console.log(cookies);
+    res.send("reading cookie");
+})
 
 app.get("/user", async (req, res) => {
   const useremail = req.body.email;
