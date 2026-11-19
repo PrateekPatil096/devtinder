@@ -41,12 +41,11 @@ try{
     if(!user){
       throw new Error("invalid E");
     }
-    const isPasswordValid=await bcrypt.compare(password,user.password);
+    const isPasswordValid=await user.validatePassword(password);
 
     if(isPasswordValid){
-      const token=await jwt.sign({_id:user._id},"dev@tinder$790",{
-        expiresIn:"7d",
-      });
+      const token = await user.getJWT();
+
       res.cookie("token",token,{
         expires:new Date(Date.now()+8*3600000),
       });
