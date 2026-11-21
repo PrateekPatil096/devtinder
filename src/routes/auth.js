@@ -53,4 +53,9 @@ catch (err) {
   }
 });
 
+authRouter.post("/logout",async(req,res)=>{
+   res.clearCookie("token");
+    res.send("logout successful");
+});
+
 module.exports=authRouter;
