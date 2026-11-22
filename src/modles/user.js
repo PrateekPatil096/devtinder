@@ -62,6 +62,14 @@ const userSchema = new mongoose.Schema({
     default: "this is default about of the user",
   },
 
+  resetPasswordToken:{
+    type:String
+  },
+
+  resetPasswordExpires:{
+    type:Date
+  },
+
   skills: {
     type: [String],
   },
