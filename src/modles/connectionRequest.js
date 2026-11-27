@@ -13,7 +13,7 @@ const connectionRequestSchema=new mongoose.Schema({
         type:String,
         required:true,
         enum:{
-            values:["ignore","interested","accepeted","rejected"],
+            values:["ignored","interested","accepted","rejected"],
             message:'{VALUE} is incorrect status type',
 
         },
@@ -30,7 +30,7 @@ connectionRequestSchema.pre("save",function(){
         throw new Error("you cannot send connection request to yourself");
 
     }
-    next();
+   
 });
 
 

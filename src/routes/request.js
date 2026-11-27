@@ -2,9 +2,8 @@ const express = require("express");
 const requestRouter = express.Router();
 
 const { userAuth } = require("../middlewares/auth");
-const ConnectionRequest = require("../models/connectionRequest");
-const User = require("../models/user");
-const connectionRequestModel = require("../modles/connectionRequest");
+const ConnectionRequest = require("../modles/connectionRequest");
+const User = require("../modles/user");
 
 requestRouter.post("/request/send/:status/:userId", userAuth, async (req, res) => {
     try {
@@ -47,7 +46,7 @@ requestRouter.post("/request/send/:status/:userId", userAuth, async (req, res) =
         }
 
        
-        const connectionRequest = new connectionRequestModel({
+        const connectionRequest = new ConnectionRequest({
             fromUserId,
             toUserId,
             status
